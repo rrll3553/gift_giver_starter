@@ -1,8 +1,7 @@
-const gifts = {
-    laptop: [],
-    phone: [],
-    desktop: [],
-}
+// const Errors = require("../utils/errors")
+// const BadRequestError = Error.BadRequestError
+const {BadRequestError} = require("../utils/errors")
+
 
 class GiftExchange {
     static generateNewNumber (seen, length) {
@@ -15,7 +14,15 @@ class GiftExchange {
 }
 
     static async pairNames(names) {
+        // if names does not exist - doesn't work
+        if (!names) {
+            throw new BadRequestError("You must pass in an array of names")
+        }
         let length = names.length
+        // if it's an odd length of number, return error
+        if (length % 2 == 1) {
+            throw new BadRequestError("You must have an even number of names")
+        }
         let answer = []
         let seen = []
         while (answer.length < (names.length/2)) {
@@ -28,6 +35,10 @@ class GiftExchange {
     }
 
     static async traditionalNames (names) {
+        // if names does not exist - doesn't work
+        if (!names) { 
+            throw new BadRequestError("You must pass in an array of names")
+        }
         let length = names.length
         let answer = []
         let seen = []
@@ -41,26 +52,9 @@ class GiftExchange {
         answer.push(names[position1] + " is giving a gift to " + names[first])
         return answer
     }
+}
 
-
-    static async tallyGifts() {
-        const giftResults = {
-            laptop: gifts.laptop.length,
-            phone: gifts.phone.length,
-            desktop: gifts.desktop.length,
-        }
-        return giftResults
-    }
-
-    static async recordGifts(gift, user) {
-        if (gifts[gift]) {
-            if (! gifts[gift].includes(user)) {
-                gifts[gift].push(user)
-            }
-        return GiftExchange.tallyGifts()
-    }
-}}
-
+// testing this page
 // names = ["Bobby", "April", "Leslie", "Chris", "Ann", "Ron"]
 // seen = []
 // test = GiftExchange.traditionalNames(names)

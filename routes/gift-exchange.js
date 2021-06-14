@@ -4,26 +4,25 @@ const router = express.Router() // instantiate a router from the express package
 
 
 
-router.get('/', async (req, res, next) => {
-    gifts = await ExchangeGifts.tallyGifts()
-    res.status(200).json(gifts)
-})
-
 
 router.post("/pairs", async (req, res, next) => {
-    // trying to pass the list of users into the GiftExchange method for pairs
-    let namesList = req.body.namesList
-    console.log(namesList)
-    pairedList = GiftExchange.pairNames(namesList)
-    console.log(pairedList) // works fine
-    res.status(200).json(pairedList)
+    // will return an array of paired names based off of the namesList passed through the req.body
+    try {
+        let namesList = req.body.namesList
+        console.log(namesList)
+        pairedList = await GiftExchange.pairNames(namesList)
+        console.log(pairedList) // works fine
+        res.status(200).json(pairedList)
+    } catch (err) {
+        next(err)
+    }
 })
 
 router.post("/traditional", async (req, res, next) => {
-    // trying to pass the list of users into the GiftExchange method for pairs
+    // will return an array of traditionally sequenced names based off of the namesList passed through the req.body
     let namesList = req.body.namesList
     console.log(namesList)
-    traditionalList = GiftExchange.traditionalNames(namesList)
+    traditionalList = await GiftExchange.traditionalNames(namesList) // need an await here or it will return a promise
     console.log(traditionalList)
     res.status(200).json(traditionalList)
 })
