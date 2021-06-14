@@ -7,6 +7,7 @@ const giftExchange = require("./routes/gift-exchange")
 const app = express() // creates a new instance of express 
 
 app.use(morgan("tiny")) // this app will use this logging middleware
+app.use(express.json()) // anytime we send a POST request, express will parse that request as JSON. need this for req.body or else it'll always be undefined
 app.use("/voting", votingRouter) // will attach the votingRouter to the '/voting' endpoint 
 app.use("/gift-exchange", giftExchange)
 

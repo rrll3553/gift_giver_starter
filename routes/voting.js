@@ -1,27 +1,18 @@
 const express = require("express")
+const Voting = require("../models/voting")
 const router = express.Router() // instantiate a router from the express package
-// equivalent to app.get 
-
-// our poll
-const voting = {
-    peperroni: 0,
-    cheese: 0,
-    hawaiian: 0,
-}
 
 router.get('/', async (req, res, next) => {
-    res.status(200).json(voting)
+    const votes = await Voting.tallyVotes()
+    res.status(200).json(votes) // you need this to show up for the GET request
 })
 
 router.post('/:pizzaName', async (req, res, next) => { //:pizzaName is a placeholder and will capture that value
-    console.log(req.params)
-    
-    const pizzaName = req.params.pizzaName
-    if (voting[pizzaName] || voting[pizzaName] === 0) {
-        voting[pizzaName] += 1
-    }
-
-    res.status(200).json(voting)
+    // console.log(req.body)
+    const user = req.body.user
+    const pizzaName = req.params.pizzaName // the route parameter is attached to req.params
+    const votes = await Voting.recordVotes(pizzaName, user)
+    res.status(200).json(votes)
 })
 
 
